@@ -1,69 +1,73 @@
 import React, { Component } from "react";
+import { type } from "os";
 
 class Request extends Component {
   constructor(props) {
     super(props);
     this.state = {
       data: "...loading",
-      base_URL: "https://ghibliapi.herokuapp.com", //change base_URL to consument different API
-      endpoints: ["/films"], //edit endpoints to what you will be using for the request
-      parameters: ["limit=2"] //same for parameters
+      base_URL: "https://ghibliapi.herokuapp.com",            // Change base_URL to consume a different API
+      endpoints: ["/films"],                                  // Edit endpoints to what you will be using for the request. Do not delete, if not using endpoint, set to empty array
+      parameters: ["limit=2", "fields=title,description,url"] // Edit parameters to what you will be using for the request. Do not delete, if not using parameters, set to empty array
     };
   }
 
   addEndPoints = ([...newURL]) => {
-    //not necessary to spread, but makes code more readable - reader knows this expects an array
-    console.group("addEndPoints()");
+    //not necessary to spread, but spreading is non-destructive and makes code more readable - reader can deduce that this method expects an array
+    console.groupCollapsed("addEndPoints()");
     let urlWithEndpoints = [...newURL];
     return new Promise((resolve, reject) => {
       this.state.endpoints.map((endpoint, index) => {
         console.log(
-          `Endpoint: %c${this.state.endpoints[index]}`,
+          `Endpoint: %c${endpoint}`,
           "color: orange"
         );
-        urlWithEndpoints.push(this.state.endpoints[index]);
+        urlWithEndpoints.push(endpoint);
         return null;
       });
       resolve(
         urlWithEndpoints,
-        console.log(`%curlWithEndpoints = ${urlWithEndpoints}`, "color: orange")
+        console.log(`%curlWithEndpoints = ${typeof(urlWithEndpoints)}: ${urlWithEndpoints}`, "color: orange")
       );
+      reject(error => console.log(`%c${error}`, 'color: #f9450e'))
       console.groupEnd();
     });
   };
 
   addParams = ([...newURL]) => {
-    console.group("addParams()");
+    console.groupCollapsed("addParams()");
     return new Promise((resolve, reject) => {
       if (this.state.parameters.length > 0) {
         newURL.push("?");
         this.state.parameters.map((parameter, index) => {
           console.log(
-            `Parameter: %c${this.state.parameters[index]}`,
+            `Parameter: %c${parameter}`,
             "color: orange"
           );
           newURL.push(
             this.state.parameters[index + 1] !== null &&
               this.state.parameters[index + 1] !== undefined
-              ? `${this.state.parameters[index]}&`
-              : newURL.push(this.state.parameters[index])
+              ? `${parameter}&`
+              : newURL.push(parameter)
           );
           return null;
         });
       }
       let final_URL = newURL.join(""); //convert into URL string to pass into makeRequest
-      console.log(`%c${final_URL}`, "color: orange");
+      console.log(`%cfinal_URL = ${type(final_URL)}: ${final_URL}`, "color: orange");
       resolve(final_URL);
+      reject(error => console.log(`%c${error}`, 'color: #f9450e'))
       console.groupEnd();
     });
   };
   buildURL = () => {
-    console.group("buildURL");
+    console.groupCollapsed("buildURL");
     return new Promise((resolve, reject) => {
       let newURL = [this.state.base_URL]; //put base url into array so I can add endpoints and parameters
       this.addEndPoints(newURL) //returns urlWithEndpoints
         .then(urlWithEndpoints => this.addParams(urlWithEndpoints)) //returns final_URL
-        .then(final_URL => resolve(final_URL));
+        .then(final_URL => resolve(final_URL))
+        .catch(error => reject(error => console.log(`%c${error}`, 'color: #f9450e')))
       console.groupEnd();
     });
   };
