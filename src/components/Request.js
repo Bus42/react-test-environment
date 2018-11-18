@@ -5,14 +5,14 @@ class Request extends Component {
     super(props);
     this.state = {
       data: "...loading",
-      base_url: "http://www.filltext.com",
+      base_URL: "http://www.filltext.com",
       params: ["rows=10", "name={firstName}"],
-      final_url: ""
+      final_URL: ""
     };
   }
 
-  buildURL = () => {
-    let newURL = [this.state.base_url];
+addParams = (newURL) => {
+  return new Promise((resolve, reject) => {
     if (this.state.params.length > 0) {
       newURL.push("?");
       for (let i = 0; i < this.state.params.length; i++) {
@@ -27,21 +27,25 @@ class Request extends Component {
         }
       }
     }
-    let final_url = newURL.join("");
-    this.setState({ final_url });
+    let final_URL = newURL.join("");
+    resolve(final_URL);
+  });
+}
+
+  buildURL = () => {
+    let newURL = [this.state.base_URL];
+    this.addParams(newURL).then(final_URL => {this.makeRequest(final_URL)});
+    //this.setState({ final_URL });
   };
 
   componentWillMount() {
     this.buildURL();
   }
 
-  componentDidMount() {
-    this.makeRequest();
-  }
 
-  makeRequest = () => {
+  makeRequest = (URL) => {
     let r = new XMLHttpRequest();
-    r.open("GET", this.state.final_url, true);
+    r.open("GET", URL, true);
     r.onreadystatechange = () => {
       if (r.readyState !== 4 || r.status !== 200) return;
       var data = JSON.parse(r.responseText);
