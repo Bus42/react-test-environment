@@ -1,5 +1,5 @@
 # React Test Environment
-This is here so I don't have to run 'create-react-app anotherfrigginapp' every time I want to test out an idea or flesh out a component. Feel free to play around or contribute!
+This is here so I don't have to run `create-react-app anotherfrigginapp` every time I want to test out an idea or flesh out a component. Feel free to play around or contribute!
 
 ## Request Component
 The first component I've built for this test environment!
