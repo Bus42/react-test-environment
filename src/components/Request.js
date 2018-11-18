@@ -21,52 +21,14 @@ class Request extends Component {
   }
 
   render() {
-    let styles = {
-        Request: {
-            width: '100vw',
-            height: '100vh',
-            display: 'flex',
-            flexFlow: 'row wrap',
-            justifyContent: 'flex-start',
-            backgroundColor: '#007ACC'
-        },
-      li: {
-        padding: "8px",
-        margin: "5px",
-        borderRadius: "8px",
-        boxShadow: "2px 3px 6px blue",
-        flex: '1 1 auto',
-        backgroundColor: '#424242',
-        border: "3px solid #434343",
-        color: 'white'
-      },
-      ul: {
-        listStyleType: "none",
-        display: 'flex',
-        flexFlow: 'row wrap'
-      }
-    };
-    let listItems = [];
-    let response = JSON.stringify(this.state.data);
-    let r = response.replace(/[^a-z:]/gi, " ").split(/,/)[0];
-    r.split(/\s\s+/).forEach(item => {
-      if (item.length > 0) {
-        listItems.push(item);
-      }
-    });
-    let list = [...listItems];
+    let divStyle = {backgroundColor:'#424242',color: '#AFAFAF', minHeight:'100vh', width: '100vw',margin:'0',padding:'20px',boxSizing:'border-box'};
     return (
-      <div id="Request" style={styles.Request}>
-        <ul style={styles.ul}>
-          {list.map(item => (
-            <li style={styles.li} key={Math.random()}>
-              {item}
-            </li>
-          ))}
-        </ul>
+      <div style={divStyle}>
+        <div><pre>{JSON.stringify(this.state.data, null, 2)}</pre></div>
       </div>
     );
   }
 }
 
 export default Request;
+ 
