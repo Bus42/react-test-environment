@@ -6,17 +6,28 @@ class Request extends Component {
     this.state = {
       data: "...loading",
       base_URL: "http://www.filltext.com",
+      endpoints: [],
       params: ["rows=10", "name={firstName}"]
     };
   }
 
+  addEndPoints = ([...newURL]) => {
+    return new Promise((resolve, reject) => {
+      for(let i = 0; i < this.state.endpoints; i++){
+        console.log(`Endpoint: %c${this.state.endpoints[i]}`, "color: orange");
+        newURL.push(this.state.endpoints[i])
+      }
+      let URLWithEndPoints = newURL;
+      resolve(URLWithEndPoints)
+    });
+  }
   
   addParams = ([...newURL]) => {
     return new Promise((resolve, reject) => {
       if (this.state.params.length > 0) {
         newURL.push("?");
         for (let i = 0; i < this.state.params.length; i++) {
-          console.log(this.state.params[i]);
+          console.log(`Parameter: %c${this.state.params[i]}`, "color: orange");
           newURL.push(
             this.state.params[i + 1] !== null &&
               this.state.params[i + 1] !== undefined
@@ -25,15 +36,15 @@ class Request extends Component {
           );
         }
       }
-      let final_URL = newURL.join("");
+      let final_URL = newURL.join("");//convert into URL string to pass into makeRequest
       resolve(final_URL);
     });
   };
-
   buildURL = () => {
     return new Promise((resolve, reject) => {
       let newURL = [this.state.base_URL]; //put base url into array so I can add endpoints and parameters
-      this.addParams(newURL)
+      this.addEndPoints(newURL)//returns URLWithEndPoints
+      .then( URLWithEndPoints => this.addParams(URLWithEndPoints))//returns final_URL
       .then(final_URL => resolve(final_URL))
     });
   };
