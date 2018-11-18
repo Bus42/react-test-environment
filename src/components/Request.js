@@ -10,6 +10,7 @@ class Request extends Component {
     };
   }
 
+  
   addParams = ([...newURL]) => {
     return new Promise((resolve, reject) => {
       if (this.state.params.length > 0) {
@@ -30,15 +31,15 @@ class Request extends Component {
   };
 
   buildURL = () => {
-    let newURL = [this.state.base_URL]; //put base url into array so I can add endpoints and parameters
-    this.addParams(newURL) //returns final_URL
-      .then(final_URL => {
-        this.makeRequest(final_URL);
-      });
+    return new Promise((resolve, reject) => {
+      let newURL = [this.state.base_URL]; //put base url into array so I can add endpoints and parameters
+      this.addParams(newURL)
+      .then(final_URL => resolve(final_URL))
+    });
   };
 
   componentWillMount() {
-    this.buildURL();
+    this.buildURL().then(final_URL => this.makeRequest(final_URL));
   }
 
   makeRequest = URL => {
