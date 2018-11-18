@@ -6,44 +6,42 @@ class Request extends Component {
     this.state = {
       data: "...loading",
       base_URL: "http://www.filltext.com",
-      params: ["rows=10", "name={firstName}"],
-      final_URL: ""
+      params: ["rows=10", "name={firstName}"]
     };
   }
 
-addParams = (newURL) => {
-  return new Promise((resolve, reject) => {
-    if (this.state.params.length > 0) {
-      newURL.push("?");
-      for (let i = 0; i < this.state.params.length; i++) {
-        console.log(this.state.params[i]);
-        if (
-          this.state.params[i + 1] !== null &&
-          this.state.params[i + 1] !== undefined
-        ) {
-          newURL.push(`${this.state.params[i]}&`);
-        } else {
-          newURL.push(this.state.params[i]);
+  addParams = ([...newURL]) => {
+    return new Promise((resolve, reject) => {
+      if (this.state.params.length > 0) {
+        newURL.push("?");
+        for (let i = 0; i < this.state.params.length; i++) {
+          console.log(this.state.params[i]);
+          newURL.push(
+            this.state.params[i + 1] !== null &&
+              this.state.params[i + 1] !== undefined
+              ? `${this.state.params[i]}&`
+              : newURL.push(this.state.params[i])
+          );
         }
       }
-    }
-    let final_URL = newURL.join("");
-    resolve(final_URL);
-  });
-}
+      let final_URL = newURL.join("");
+      resolve(final_URL);
+    });
+  };
 
   buildURL = () => {
-    let newURL = [this.state.base_URL];
-    this.addParams(newURL).then(final_URL => {this.makeRequest(final_URL)});
-    //this.setState({ final_URL });
+    let newURL = [this.state.base_URL]; //put base url into array so I can add endpoints and parameters
+    this.addParams(newURL) //returns final_URL
+      .then(final_URL => {
+        this.makeRequest(final_URL);
+      });
   };
 
   componentWillMount() {
     this.buildURL();
   }
 
-
-  makeRequest = (URL) => {
+  makeRequest = URL => {
     let r = new XMLHttpRequest();
     r.open("GET", URL, true);
     r.onreadystatechange = () => {
