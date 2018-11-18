@@ -8,7 +8,7 @@ class Request extends Component {
       data: "...loading",
       base_URL: "https://ghibliapi.herokuapp.com",            // Change base_URL to consume a different API
       endpoints: ["/films"],                                  // Edit endpoints to what you will be using for the request. Do not delete, if not using endpoint, set to empty array
-      parameters: ["limit=2", "fields=title,description,url"] // Edit parameters to what you will be using for the request. Do not delete, if not using parameters, set to empty array
+      parameters: ["limit=2", "fields=title,description,url,"] // Edit parameters to what you will be using for the request. Do not delete, if not using parameters, set to empty array
     };
   }
 
