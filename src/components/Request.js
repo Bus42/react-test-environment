@@ -4,58 +4,66 @@ class Request extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: "https://ghibliapi.herokuapp.com",
-      resources: ["films", "species", "people"]
+      data: "...loading",
+      url: "http://www.filltext.com?rows=10&f={firstName}"
     };
   }
-  handleClick = e => {
-    const output = document.getElementById("root");
 
-    const logo = document.createElement("img");
-    logo.setAttribute('src', 'logo.png');
-    logo.setAttribute('alt', 'no image available');
+  componentDidMount() {
+    let r = new XMLHttpRequest();
+    r.open("GET", this.state.url, true);
+    r.onreadystatechange = () => {
+      if (r.readyState !== 4 || r.status !== 200) return;
+      var data = JSON.parse(r.responseText);
+      this.setState({ data });
+    };
+    r.send();
+  }
 
-    const container = document.createElement("div");
-    container.setAttribute("class", "container");
-
-    output.appendChild(logo);
-    output.appendChild(container);
-
-    var request = new XMLHttpRequest();
-    request.open("GET", `${this.state.url}/${this.state.resources[0]}`, true);
-    request.onload = function() {
-      // Begin accessing JSON data here
-      var data = JSON.parse(this.response);
-      if (request.status >= 200 && request.status < 400) {
-        data.forEach(movie => {
-          const card = document.createElement("div");
-          card.setAttribute("class", "card");
-
-          const h1 = document.createElement("h1");
-          h1.textContent = movie.title;
-
-          const p = document.createElement("p");
-          movie.description = movie.description.substring(0, 300);
-          p.textContent = `${movie.description}...`;
-
-          container.appendChild(card);
-          card.appendChild(h1);
-          card.appendChild(p);
-        });
-      } else {
-        const errorMessage = document.createElement("marquee");
-        errorMessage.textContent = `Gah, it's not working!`;
-        output.appendChild(errorMessage);
+  render() {
+    let styles = {
+        Request: {
+            width: '100vw',
+            height: '100vh',
+            display: 'flex',
+            flexFlow: 'row wrap',
+            justifyContent: 'flex-start',
+            backgroundColor: '#007ACC'
+        },
+      li: {
+        padding: "8px",
+        margin: "5px",
+        borderRadius: "8px",
+        boxShadow: "2px 3px 6px blue",
+        flex: '1 1 auto',
+        backgroundColor: '#424242',
+        border: "3px solid #434343",
+        color: 'white'
+      },
+      ul: {
+        listStyleType: "none",
+        display: 'flex',
+        flexFlow: 'row wrap'
       }
     };
-
-    request.send();
-  };
-  render() {
+    let listItems = [];
+    let response = JSON.stringify(this.state.data);
+    let r = response.replace(/[^a-z:]/gi, " ").split(/,/)[0];
+    r.split(/\s\s+/).forEach(item => {
+      if (item.length > 0) {
+        listItems.push(item);
+      }
+    });
+    let list = [...listItems];
     return (
-      <div>
-        <button onClick={this.handleClick}>Request Data</button>
-        <div id="Request">Output will go here</div>
+      <div id="Request" style={styles.Request}>
+        <ul style={styles.ul}>
+          {list.map(item => (
+            <li style={styles.li} key={Math.random()}>
+              {item}
+            </li>
+          ))}
+        </ul>
       </div>
     );
   }
