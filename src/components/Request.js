@@ -5,47 +5,66 @@ class Request extends Component {
     super(props);
     this.state = {
       data: "...loading",
-      base_URL: "http://www.filltext.com",
-      endpoints: [],
-      params: ["rows=10", "name={firstName}"]
+      base_URL: "https://ghibliapi.herokuapp.com", //change base_URL to consument different API
+      endpoints: ["/films"], //edit endpoints to what you will be using for the request
+      parameters: ["limit=2"] //same for parameters
     };
   }
 
   addEndPoints = ([...newURL]) => {
+    //not necessary to spread, but makes code more readable - reader knows this expects an array
+    console.group("addEndPoints()");
+    let urlWithEndpoints = [...newURL];
     return new Promise((resolve, reject) => {
-      for(let i = 0; i < this.state.endpoints; i++){
-        console.log(`Endpoint: %c${this.state.endpoints[i]}`, "color: orange");
-        newURL.push(this.state.endpoints[i])
-      }
-      let URLWithEndPoints = newURL;
-      resolve(URLWithEndPoints)
+      this.state.endpoints.map((endpoint, index) => {
+        console.log(
+          `Endpoint: %c${this.state.endpoints[index]}`,
+          "color: orange"
+        );
+        urlWithEndpoints.push(this.state.endpoints[index]);
+        return null;
+      });
+      resolve(
+        urlWithEndpoints,
+        console.log(`%curlWithEndpoints = ${urlWithEndpoints}`, "color: orange")
+      );
+      console.groupEnd();
     });
-  }
-  
+  };
+
   addParams = ([...newURL]) => {
+    console.group("addParams()");
     return new Promise((resolve, reject) => {
-      if (this.state.params.length > 0) {
+      if (this.state.parameters.length > 0) {
         newURL.push("?");
-        for (let i = 0; i < this.state.params.length; i++) {
-          console.log(`Parameter: %c${this.state.params[i]}`, "color: orange");
-          newURL.push(
-            this.state.params[i + 1] !== null &&
-              this.state.params[i + 1] !== undefined
-              ? `${this.state.params[i]}&`
-              : newURL.push(this.state.params[i])
+        this.state.parameters.map((parameter, index) => {
+          console.log(
+            `Parameter: %c${this.state.parameters[index]}`,
+            "color: orange"
           );
-        }
+          newURL.push(
+            this.state.parameters[index + 1] !== null &&
+              this.state.parameters[index + 1] !== undefined
+              ? `${this.state.parameters[index]}&`
+              : newURL.push(this.state.parameters[index])
+          );
+          return null;
+        });
       }
-      let final_URL = newURL.join("");//convert into URL string to pass into makeRequest
+      let final_URL = newURL.join(""); //convert into URL string to pass into makeRequest
+      console.log(`%c${final_URL}`, "color: orange");
       resolve(final_URL);
+      console.groupEnd();
     });
   };
   buildURL = () => {
+    console.group("buildURL");
     return new Promise((resolve, reject) => {
       let newURL = [this.state.base_URL]; //put base url into array so I can add endpoints and parameters
-      this.addEndPoints(newURL)//returns URLWithEndPoints
-      .then( URLWithEndPoints => this.addParams(URLWithEndPoints))//returns final_URL
-      .then(final_URL => resolve(final_URL))
+      this.addEndPoints(newURL) //returns urlWithEndpoints
+        .then(urlWithEndpoints => this.addParams(urlWithEndpoints)) //returns final_URL
+        .then(final_URL => resolve(final_URL));
+      console.groupEnd();
     });
   };
 
@@ -54,6 +73,7 @@ class Request extends Component {
   }
 
   makeRequest = URL => {
+    console.log(`%c${URL}`, "color: #007ACC");
     let r = new XMLHttpRequest();
     r.open("GET", URL, true);
     r.onreadystatechange = () => {
