@@ -2,9 +2,28 @@
 This is here so I don't have to run `create-react-app anotherfrigginapp` every time I want to test out an idea or flesh out a component. Feel free to play around or contribute!
 
 ## Request Component
-The first component I've built for this test environment!
-I'm building this to create a template component that I can reuse in any React application that I'm building. The idea is to only have to change the base_url, resources, and parameters, the rest is ready to go including data rendering and error handling so I can get right to work on manipulating the data instead of writing 100+ lines of code to do the exact same thing any other XMLHTTPRequest would do.
 
+The idea is to create a XMLHTTPRequest component that can be reused across applications with self-contained logic.
+
+### To make a request
+
+#### Edit requestConfig.js
+
+1. Edit base_URL
+* ex: `https://randomuser.me`
+2. Edit endpoints
+* ex: `/api`
+3. Edit parameters
+* ex: `format=JSON,results=2`
+
+### To process data from the request
+
+#### Edit processData method in Request.js
+
+The `processData` method accepts the parsed JSON response and returns a promise. By default, it simply passes the data through untouched to the `render` method.
+To change this behavior, write your logic inside the promise that is inside the `processData` method, then update the `render` method to visualize your data.
+
+Try it out by replacing the values in `requestConfig.js`, you can copy and paste them if you like, just don't forget to leave the quotation marks.
 
 Thanks for checking out my stuff,
 

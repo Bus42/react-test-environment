@@ -1,13 +1,16 @@
+/**
+ * In theory, you should only have to edit the requestConfig file to make a request.
+ * You should only need to edit this file to process the request.
+ */
 import React, { Component } from "react";
+import config from './requestConfig';
+
 
 class Request extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: "...loading",
-      base_URL: "https://ghibliapi.herokuapp.com",            // Change base_URL to consume a different API
-      endpoints: ["/films", "/people"],                                  // Edit endpoints to what you will be using for the request. Do not delete, if not using endpoint, set to empty array
-      parameters: ["limit=20", "fields=title,id,description,url"] // Edit parameters to what you will be using for the request. Do not delete, if not using parameters, set to empty array
+      data: "...loading"
     };
   }
 
@@ -16,7 +19,7 @@ class Request extends Component {
     console.groupCollapsed("addEndPoints()");
     let urlWithEndpoints = [...newURL];
     return new Promise((resolve, reject) => {
-      this.state.endpoints.map((endpoint, index) => {
+      config.endpoints.map((endpoint, index) => {
         console.log(
           `Endpoint: %c${endpoint}`,
           "color: orange"
@@ -36,16 +39,16 @@ class Request extends Component {
   addParams = ([...newURL]) => {
     console.groupCollapsed("addParams()");
     return new Promise((resolve, reject) => {
-      if (this.state.parameters.length > 0) {// If parameters are present
+      if (config.parameters.length > 0) {// If parameters are present
         newURL.push("?");// Begin query section of URL string
-        this.state.parameters.map((parameter, index) => {
+        config.parameters.map((parameter, index) => {
           console.log(
             `Parameter: %c${parameter}`,
             "color: orange"
           );
           newURL.push(
-            this.state.parameters[index + 1] !== null &&
-              this.state.parameters[index + 1] !== undefined
+            config.parameters[index + 1] !== null &&
+              config.parameters[index + 1] !== undefined
               ? `${parameter}&`
               : newURL.push(parameter)// if there is another parameter after the current one, add a combinator
           );
@@ -63,7 +66,7 @@ class Request extends Component {
   buildURL = () => {
     console.groupCollapsed("buildURL");
     return new Promise((resolve, reject) => {
-      let newURL = [this.state.base_URL]; //put base url into array so I can add endpoints and parameters
+      let newURL = [config.base_URL]; //put base url into array so I can add endpoints and parameters
       this.addEndPoints(newURL) //returns urlWithEndpoints
         .then(urlWithEndpoints => this.addParams(urlWithEndpoints)) //returns final_URL
         .then(final_URL => resolve(final_URL))
@@ -74,7 +77,7 @@ class Request extends Component {
 
   componentWillMount() {
     this.buildURL().then(final_URL => this.makeRequest(final_URL));
-  }
+  };
 
   makeRequest = URL => {
     console.groupCollapsed('makeRequest()')
@@ -84,10 +87,20 @@ class Request extends Component {
     r.onreadystatechange = () => {
       if (r.readyState !== 4 || r.status !== 200) return;
       var data = JSON.parse(r.responseText);
-      this.setState({ data });
+      this.processData(data);
     };
     r.send();
     console.groupEnd();
+  };
+
+  processData = input => {
+    return new Promise((resolve, reject) => {
+      //
+      let data = input; //Replace this with your logic
+      //
+      resolve(this.setState({data}))
+      reject(error => console.log(error))
+    });
   };
 
   render() {
@@ -108,6 +121,6 @@ class Request extends Component {
       </div>
     );
   }
-}
+};
 
 export default Request;
