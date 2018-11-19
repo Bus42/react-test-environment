@@ -10,11 +10,11 @@ The idea is to create a XMLHTTPRequest component that can be reused across appli
 #### Edit requestConfig.js
 
 1. Edit base_URL
-* ex: `https://randomuser.me`
+    * ex: `https://randomuser.me`
 2. Edit endpoints
-* ex: `/api`
+    * ex: `/api`
 3. Edit parameters
-* ex: `format=JSON,results=2`
+    * ex: `format=JSON,results=2`
 
 ### To process data from the request
 
