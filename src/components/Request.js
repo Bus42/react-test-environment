@@ -8,7 +8,7 @@ class Request extends Component {
       data: "...loading",
       base_URL: "https://ghibliapi.herokuapp.com",            // Change base_URL to consume a different API
       endpoints: ["/films"],                                  // Edit endpoints to what you will be using for the request. Do not delete, if not using endpoint, set to empty array
-      parameters: ["limit=2", "fields=title,description,url,"] // Edit parameters to what you will be using for the request. Do not delete, if not using parameters, set to empty array
+      parameters: ["limit=2", "fields=title,description,url"] // Edit parameters to what you will be using for the request. Do not delete, if not using parameters, set to empty array
     };
   }
 
@@ -37,8 +37,8 @@ class Request extends Component {
   addParams = ([...newURL]) => {
     console.groupCollapsed("addParams()");
     return new Promise((resolve, reject) => {
-      if (this.state.parameters.length > 0) {
-        newURL.push("?");
+      if (this.state.parameters.length > 0) {// If parameters are present
+        newURL.push("?");// Begin query section of URL string
         this.state.parameters.map((parameter, index) => {
           console.log(
             `Parameter: %c${parameter}`,
@@ -48,11 +48,12 @@ class Request extends Component {
             this.state.parameters[index + 1] !== null &&
               this.state.parameters[index + 1] !== undefined
               ? `${parameter}&`
-              : newURL.push(parameter)
+              : newURL.push(parameter)// if there is another parameter after the current one, add a combinator
           );
           return null;
         });
       }
+      newURL.splice(newURL.length -1, 1);//Don't know why but a single digit was always at the end of the array
       let final_URL = newURL.join(""); //convert into URL string to pass into makeRequest
       console.log(`%cfinal_URL = ${type(final_URL)}: ${final_URL}`, "color: orange");
       resolve(final_URL);
