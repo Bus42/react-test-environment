@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { type } from "os";
 
 class Request extends Component {
   constructor(props) {
@@ -7,8 +6,8 @@ class Request extends Component {
     this.state = {
       data: "...loading",
       base_URL: "https://ghibliapi.herokuapp.com",            // Change base_URL to consume a different API
-      endpoints: ["/films"],                                  // Edit endpoints to what you will be using for the request. Do not delete, if not using endpoint, set to empty array
-      parameters: ["limit=2", "fields=title,description,url"] // Edit parameters to what you will be using for the request. Do not delete, if not using parameters, set to empty array
+      endpoints: ["/films", "/people"],                                  // Edit endpoints to what you will be using for the request. Do not delete, if not using endpoint, set to empty array
+      parameters: ["limit=20", "fields=title,id,description,url"] // Edit parameters to what you will be using for the request. Do not delete, if not using parameters, set to empty array
     };
   }
 
@@ -55,7 +54,7 @@ class Request extends Component {
       }
       newURL.splice(newURL.length -1, 1);//Don't know why but a single digit was always at the end of the array
       let final_URL = newURL.join(""); //convert into URL string to pass into makeRequest
-      console.log(`%cfinal_URL = ${type(final_URL)}: ${final_URL}`, "color: orange");
+      console.log(`%cfinal_URL = ${typeof(final_URL)}: ${final_URL}`, "color: orange");
       resolve(final_URL);
       reject(error => console.log(`%c${error}`, 'color: #f9450e'))
       console.groupEnd();
@@ -78,7 +77,8 @@ class Request extends Component {
   }
 
   makeRequest = URL => {
-    console.log(`%c${URL}`, "color: #007ACC");
+    console.groupCollapsed('makeRequest()')
+    console.log(`%cRequest URL is ${URL}`, "color: #007ACC");
     let r = new XMLHttpRequest();
     r.open("GET", URL, true);
     r.onreadystatechange = () => {
@@ -87,6 +87,7 @@ class Request extends Component {
       this.setState({ data });
     };
     r.send();
+    console.groupEnd();
   };
 
   render() {
