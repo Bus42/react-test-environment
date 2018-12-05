@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import "./App.css";
-import Request from './components/request/Request';
-//add router here to test different components
-
+import AppRouter from "./components/appRouter/AppRouter";
 class App extends Component {
   render() {
-    return <Request />;
+    return (<main id="app-wrapper">
+    <AppRouter/>
+    </main>);
   }
 }
 
