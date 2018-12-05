@@ -1,9 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Request from '../request/Request';
+import Home from '../home/Home'
 import './appRouter.css';
-
-const Home = () => <h2>Home</h2>
 
 const AppRouter = ({...props}) => {
 const prefix = "appRouter-"
